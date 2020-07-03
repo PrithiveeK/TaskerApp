@@ -1,0 +1,19 @@
+.form-container{
+    margin-top: 100px;
+    height: 300px;
+    font-size: 28px;
+}
+.register{
+    width: 200px;
+}
+.user-input{
+    height: 80px;
+    width: 250px;
+    border: none;
+    border-bottom: 2px solid black;
+    background: none;
+    font-size: 28px;
+}
+.user-input-label{
+    margin-top: 50px;
+}

@@ -1,0 +1,14 @@
+.status-bar{
+    height: 20px;
+    background-color: indianred;
+}
+.status-block{
+    margin: 10px 5px;
+    height: 50px;
+    justify-content: space-between;
+}
+.all-status{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    justify-content: space-between;
+}

@@ -1,0 +1,28 @@
+.priority{
+    width: 10px;
+    height: 2px;
+    background-color: currentColor;
+}
+.priority::before{
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-top: 2px solid currentColor;
+    border-right: 2px solid currentColor;
+    transform: rotateZ(45deg);
+    top: -3px;
+    left: 2px;
+}
+.priority-0{
+    color: #006eff;
+    transform: rotateZ(0deg);
+}
+.priority-1{
+    color: red;
+    transform: rotateZ(-90deg);
+}
+.priority--1{
+    color: green;
+    transform: rotateZ(90deg);
+}

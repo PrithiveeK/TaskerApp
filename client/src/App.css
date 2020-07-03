@@ -1,0 +1,118 @@
+header{
+  height: 64px;
+  width: 100%;
+  padding: 10px;
+}
+
+button{
+  background: none;
+  outline: none;
+  border: none;
+}
+
+a{
+  color: blue;
+  font-size: 18px;
+}
+
+.d_flex{
+  display: flex;
+}
+
+.flex_wrap{
+  flex-wrap: wrap;
+}
+
+.jc_c{
+  justify-content: center;
+}
+
+.jc_sa{
+  justify-content: space-around;
+}
+
+.jc_sb{
+  justify-content: space-between;
+}
+
+.align_c{
+  align-items: center;
+}
+
+.body_h{
+  height: calc(100vh - 64px);
+}
+
+.pos_rel{
+  position: relative;
+}
+
+.pos_abs{
+  position: absolute;
+}
+
+.br_100{
+  border-radius: 100%;
+}
+
+.m_auto{
+  margin: auto;
+}
+
+.fd_col{
+  flex-direction: column;
+}
+
+.flex_1{
+  flex: 1;
+}
+
+.w_100{
+  width: 100%;
+}
+.scroll{
+  overflow: hidden scroll;
+}
+.of_auto{
+  overflow: hidden auto;
+}
+.body-content{
+  margin: 64px 0 0 80px;
+  width: calc(100vw - 80px);
+  background-color: #cccccc50;
+}
+.sb_none::-webkit-scrollbar{
+  display: none;
+}
+
+.status-content{
+  padding: 5px 10px;
+  border-radius: 22px;
+  height: 22px;
+  color: #fff;
+  justify-content: center;
+  width: 80px;
+}
+.status-open{
+  background-color: darkorange;
+}
+.status-closed{
+  background-color: darkseagreen;
+}
+.status-reopen{
+  background-color: deeppink;
+}
+.status-resolved{
+  background-color: dodgerblue;
+}
+.status-qa{
+  background-color: greenyellow;
+}
+.status-in-progress{
+  background-color: khaki;
+}
+.error{
+  color: red;
+  font-size: 14px;
+  margin: 0 10px;
+}
