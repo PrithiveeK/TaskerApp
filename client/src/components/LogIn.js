@@ -13,7 +13,28 @@ function LogIn(props) {
     }
     const handleSubmit = (event) => {
         event.preventDefault()
-        props.history.push("/home")
+        fetch("http://localhost:5000/api/user/login",{
+            method: "POST",
+            body: JSON.stringify(user)
+        }).then(res=>res.json())
+        .then(data => {
+            if(data.ID){
+                localStorage.setItem("loggedInUser",data.ID)
+                props.history.push("/home")
+            }else{
+                setUser({
+                    ...user,
+                    error: data.Message
+                })
+            }
+        })
+        .catch(err=>{
+            console.log(err)
+            setUser({
+                ...user,
+                error: "Sorry, Try Again!"
+            })
+        })
     }
     return (
         <form className={`${style['form-container']} d_flex align_c fd_col jc_sa`}
@@ -26,6 +47,7 @@ function LogIn(props) {
                 <button type="submit">Log In</button>
                 <Link to="/?p=signup">SignUp</Link>
             </div>
+            <div className={`error`}>{user.error}</div>
         </form>
     );
 }

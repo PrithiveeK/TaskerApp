@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import LogIn from './LogIn';
 import SignUp from './SignUp';
@@ -14,6 +14,10 @@ function LoginSignup(props) {
         props.history.push(`/?p=${page}`);
     }
     const page = props.location.search.substr(1).split("=")[1];
+
+    useEffect(()=>{
+        localStorage.clear()
+    })
     return (
         <div className={`${style['body-container']}`}>
             <header className={`${style['header-container']} d_flex align_c jc_sb`}>

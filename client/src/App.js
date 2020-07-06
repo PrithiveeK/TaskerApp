@@ -7,20 +7,20 @@ import LoginSignup from './components/LoginSignup';
 import HomePage from './components/HomePage';
 import TaskTable from './components/TaskTable';
 import AddTask from './components/AddTask';
-import ProjectUpdates from './components/ProjectUpdates';
 import store from './redux'; 
+import ProjectList from './components/ProjectList';
 
 function App() {
   return (
     <Provider store={store}>
     <BrowserRouter>
       <div className="App">
-      <Route exact path="/" component={LoginSignup} />
-      <Route path="/home" component={HomePage} />
-      <Route path="/add" component={AddTask} />
-      <Route path="/tasks" component={TaskTable} />
-      <Route path="/project" component={ProjectUpdates} />
-    </div>
+        <Route exact path="/" component={LoginSignup} />
+        <Route path="/home" component={HomePage} />
+        <Route path="/project/:id" component={ProjectList} />
+        <Route path="/add" component={AddTask} />
+        <Route path="/tasks" component={TaskTable} />
+      </div>
     </BrowserRouter>
     </Provider>
   );

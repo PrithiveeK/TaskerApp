@@ -49,16 +49,17 @@ func AddTaskForProject(res http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 	newTask := models.Tasks{
-		Subject:     req.FormValue("subject"),
-		Description: req.FormValue("description"),
-		Status:      "Open",
-		Priority:    priority,
-		Category:    req.FormValue("category"),
-		DateCreated: time.Now(),
-		StartDate:   time.Now(),
-		DueDate:     time.Now(),
-		AssigneeID:  userID,
-		ProjectID:   projectID,
+		Subject:      req.FormValue("subject"),
+		Description:  req.FormValue("description"),
+		Status:       "Open",
+		Priority:     priority,
+		Category:     req.FormValue("category"),
+		DateCreated:  time.Now(),
+		DateModified: time.Now(),
+		StartDate:    time.Now(),
+		DueDate:      time.Now(),
+		AssigneeID:   userID,
+		ProjectID:    projectID,
 	}
 
 	_, err = TasksColl.InsertOne(ctx, newTask)

@@ -17,3 +17,20 @@ export function usersDataError(payLoad) {
         payLoad
     }
 }
+
+export function fetchAllUsers() {
+    return (dispatch) => {
+        dispatch(fetchUsersData());
+        fetch("http://localhost:5000/api/user/all",{
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res=>res.json())
+        .then(data=>{
+            dispatch(fetchedUsersData(data || []))
+        }).catch(err=>{
+            dispatch(usersDataError("Sorry, something went wrong!"))
+        })
+    }
+}

@@ -13,13 +13,32 @@ function SignUp(props) {
     }
     const handleSubmit = (event) => {
         event.preventDefault()
-        props.history.push("/home")
+        fetch("http://localhost:5000/api/user/signup",{
+            method: "POST",
+            body: JSON.stringify(user)
+        }).then(res=>res.json())
+        .then(data => {
+            if(data.ID){
+                localStorage.setItem("loggedInUser",data.ID)
+                props.history.push("/home")
+            }else{
+                setUser({
+                    ...user,
+                    error: data.Message
+                })
+            }
+        }).catch(err=>{
+            setUser({
+                ...user,
+                error: "Sorry, Try Again!"
+            })
+        })
     }
 
     return (
         <form className={`${style['form-container']} d_flex align_c fd_col jc_sa`} onSubmit={handleSubmit}>
             <label className={`${style['user-input-label']}`}>USER NAME</label>
-            <input type="email" className={`${style['user-input']}`} onChange={handleChange} name="username" value={user.username}/>
+            <input type="text" className={`${style['user-input']}`} onChange={handleChange} name="username" value={user.username}/>
             <label className={`${style['user-input-label']}`}>USER EMAIL</label>
             <input type="email" className={`${style['user-input']}`} onChange={handleChange} name="useremail" value={user.useremail}/>
             <label className={`${style['user-input-label']}`}>PASSWORD</label>
@@ -28,6 +47,7 @@ function SignUp(props) {
                 <button type="submit">Sign Up</button>
                 <Link to="/?p=login">Log In</Link>
             </div>
+            <div className={`error`}>{user.error}</div>
         </form>
     );
 }

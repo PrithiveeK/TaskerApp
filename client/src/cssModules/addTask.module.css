@@ -36,3 +36,18 @@
     display: grid;
     grid-template-columns: 100px auto;
 }
+
+.display-message{
+    position: fixed;
+    bottom: 10px;
+    width: calc(100% - 120px);
+    height: 50px;
+    color: #fff;
+}
+
+.success{
+    border-radius: 4px;
+    background-color: green;
+    width: 400px;
+    height: 90%;
+}

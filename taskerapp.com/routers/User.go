@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"../models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,44 +27,74 @@ func checkPasswordHash(password, hash string) bool {
 //CreateUserAccount create a user account
 func CreateUserAccount(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
-
-	req.ParseForm()
+	type Response struct {
+		ID, Message string
+	}
+	response := Response{
+		ID:      "",
+		Message: "Account already Exists!",
+	}
+	type UserInfo struct {
+		Username string `json:"username"`
+		Email    string `json:"useremail"`
+		Password string `json:"password"`
+	}
+	var userInfo UserInfo
+	json.NewDecoder(req.Body).Decode(&userInfo)
 
 	newUser := models.Users{
-		UserName: req.FormValue("username"),
-		Email:    req.FormValue("useremail"),
-		Password: hashPassword(req.FormValue("password")),
+		UserName: userInfo.Username,
+		Email:    userInfo.Email,
+		Password: hashPassword(userInfo.Password),
 	}
 
 	user, err := UsersColl.InsertOne(ctx, newUser)
 	if err != nil {
-		log.Fatal(err)
+		json.NewEncoder(res).Encode(&response)
+		return
 	}
 	if oid, ok := user.InsertedID.(primitive.ObjectID); ok {
 		json.NewEncoder(res).Encode(map[string]interface{}{
-			"id": oid.Hex(),
+			"ID": oid.Hex(),
 		})
+	} else {
+		json.NewEncoder(res).Encode(&response)
 	}
 }
 
 //LogIntoUser logs into tasker app
 func LogIntoUser(res http.ResponseWriter, req *http.Request) {
-	res.Header().Set("Content-Type", "application/text")
+	res.Header().Set("Content-Type", "application/json")
+	type Response struct {
+		ID, Message string
+	}
+	response := Response{
+		ID:      "",
+		Message: "Invalid Email OR Password",
+	}
+	type UserInfo struct {
+		Email    string `json:"useremail"`
+		Password string `json:"password"`
+	}
+	userInfo := UserInfo{}
 
-	req.ParseForm()
+	json.NewDecoder(req.Body).Decode(&userInfo)
 
 	var user models.Users
 
-	if err := UsersColl.FindOne(ctx, &models.Users{Email: req.FormValue("useremail")}).Decode(&user); err != nil {
-		log.Fatal(err)
+	if err := UsersColl.FindOne(ctx, &models.Users{Email: userInfo.Email}).Decode(&user); err != nil {
+		json.NewEncoder(res).Encode(&response)
+		return
 	}
 
-	result := checkPasswordHash(req.FormValue("password"), user.Password)
+	result := checkPasswordHash(userInfo.Password, user.Password)
 
 	if result {
 		json.NewEncoder(res).Encode(map[string]interface{}{
-			"id": user.ID.Hex(),
+			"ID": user.ID.Hex(),
 		})
+	} else {
+		json.NewEncoder(res).Encode(&response)
 	}
 }
 
@@ -88,5 +119,24 @@ func GetTeamMembers(res http.ResponseWriter, req *http.Request) {
 	}
 
 	json.NewEncoder(res).Encode(teamMembers)
+
+}
+
+//GetAllUsers gets all the users from the Users collection
+func GetAllUsers(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Content-Type", "application/json")
+
+	var users []models.Users
+
+	userCursor, err := UsersColl.Find(ctx, bson.M{})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if err = userCursor.All(ctx, &users); err != nil {
+		log.Fatal(err)
+	}
+
+	json.NewEncoder(res).Encode(users)
 
 }

@@ -15,6 +15,7 @@ type Tasks struct {
 	Priority    int                `bson:"priority"`
 	Category    string             `bson:"category"`
 	DateCreated time.Time          `bson:"dateCreated"`
+	DateModified time.Time          `bson:"dateModified"`
 	StartDate   time.Time          `bson:"startDate"`
 	DueDate     time.Time          `bson:"dueDate"`
 	AssigneeID  primitive.ObjectID `bson:"assigneeID"`

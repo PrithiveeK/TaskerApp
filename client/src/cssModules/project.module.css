@@ -7,3 +7,8 @@
     padding: 0 5px;
     background-color: #fff;
 }
+.project-content a{
+    color: black;
+    display: inline-block;
+    text-decoration: none;
+}

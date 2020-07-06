@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from './Header';
 
 import style from '../cssModules/addTask.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchTeamData, fetchedTeamData, teamDataError } from '../redux';
 
 function AddTask(props) {
 
     const team = useSelector(state => state.team)
+    const dispatch = useDispatch()
 
     const [newtask,setNewTask] = useState({
         subject: "",
@@ -17,7 +19,8 @@ function AddTask(props) {
         category: "",
         start_date: "",
         due_date: "",
-        error: ""
+        error: "",
+        done: {ok:false, message: "", className: ""}
     })
 
     const handleChange = (event) => {
@@ -26,6 +29,26 @@ function AddTask(props) {
             [event.target.name]: event.target.value
         })
     }
+
+    // useEffect(()=>{
+    //     dispatch(fetchTeamData())
+    //     fetch("http://localhost:5000/api/team",{
+    //         method: "GET",
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'client': JSON.parse(localStorage.getItem("loggedInUser"))
+    //         }
+    //     }).then(res=>res.json())
+    //     .then(data=>{
+    //         if(data){
+    //             dispatch(fetchedTeamData(data))
+    //         } else{
+    //             dispatch(teamDataError("Sorry, something went wrong!"))
+    //         }
+    //     }).catch(err=>{
+    //         dispatch(teamDataError("Sorry, something went wrong!"))
+    //     })
+    // },[])
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -36,22 +59,59 @@ function AddTask(props) {
             });
         }
         else{
-            fetch("http://localhost:5000/api/",{
+            fetch("http://localhost:5000/api/task/add",{
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                     'client': JSON.parse(localStorage.getItem('loggedInUser')),
-                    'project-id': "asd"
+                    'project-id': props.match.prams.id
+                },
+                body: JSON.stringify(newtask)
+            }).then(res=>res.json())
+            .then(data=> {
+                if(data.ok){
+                    setNewTask({
+                        subject: "",
+                        description: "",
+                        assignee: "",
+                        priority: 0,
+                        category: "",
+                        start_date: "",
+                        due_date: "",
+                        error: "",
+                        done: {ok: true, message: "Task added Successfully!", className: "success"}
+                    })
+                } else {
+                    setNewTask({
+                        ...newtask,
+                        done: {ok: true, message: "Task adding Failed!", className: "failed"}
+                    })
                 }
+            }).catch(err=>{
+                setNewTask({
+                    ...newtask,
+                    done: {ok: true, message: "sorry, Something went Wrong!", className: "failed"}
+                })
+            }).finally(()=>{
+                setTimeout(()=>{
+                    setNewTask({
+                        ...newtask,
+                        done: {ok: false, message: "", className: ""}
+                    })
+                },2000);
             })
         }
     }
-    console.log(props);
     return (
         <div>
             <Header />
             <div className={`body-content body_h scroll`}>
                 <div className={`${style['form-container']}`}>
+                    { newtask.done.ok && (<div className={`${style['display-message']} d_flex`}>
+                        <div className={`${style[newtask.done.className]} m_auto d_flex`}>
+                            <p className={`m_auto`}>{newtask.done.message}</p>
+                        </div>
+                    </div>)}
                     <h3>Add Task</h3>
                     <form className={`${style['task-form']}`} onSubmit={handleSubmit}>
                         <div className={`${style['task-subject']}`}>

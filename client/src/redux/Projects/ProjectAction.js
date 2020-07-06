@@ -17,3 +17,20 @@ export function projectDataError(payLoad) {
         payLoad
     }
 }
+
+export function fetchAllProject(){
+    return (dispatch) => {
+        dispatch(fetchProjectData())
+        fetch("http://localhost:5000/api/project/all",{
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res=>res.json())
+        .then(data=>{
+            dispatch(fetchedProjectData(data || []))
+        }).catch(err=>{
+            dispatch(projectDataError("Sorry, Something went wrong!"))
+        })
+    }
+}

@@ -23,3 +23,31 @@
     background-color: #fff;
     padding: 15px;
 }
+
+.add::before{
+    content: "";
+    position: absolute;
+    width: 25px;
+    height: 5px;
+    background-color: currentColor;
+    top: -2px;
+    left: -12px;
+}
+.add::after{
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 25px;
+    background-color: currentColor;
+    top: -12px;
+    left: -2px;
+}
+
+.add-task{
+    width: 150px;
+    border-radius: 20px;
+    background-color: #2e8bfd;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}

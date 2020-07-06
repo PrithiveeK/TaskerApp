@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './Header';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import TaskContent from './TaskContent';
-
+import { fetchAllUsers, fetchAllTasks } from '../redux';
 import style from '../cssModules/taskTable.module.css';
 
 function TaskTable(props) {
@@ -10,6 +10,12 @@ function TaskTable(props) {
     const tasks = useSelector(state => state.tasks)
     const allUsers = useSelector(state => state.users)
 
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch(fetchAllUsers())
+        dispatch(fetchAllTasks())
+    },[])
     return (
         <div>
             <Header />
@@ -30,11 +36,20 @@ function TaskTable(props) {
                     <div className={`${style['filter-line']} w_100 d_flex`}>
                         <div>
                             <p>Category</p>
-                            <select></select>
+                            <select>
+                                <option value=""></option>
+                                <option value="frontend">Frontend</option>
+                                <option value="server">Server</option>
+                                <option value="database">Database</option>
+                                <option value="testing">Testing</option>
+                            </select>
                         </div>
                         <div>
                             <p>Assignee</p>
-                            <select></select>
+                            <select>
+                                <option value=""></option>
+                                {allUsers.data.map(user=><option value={user.UserName} key={user.ID}>{user.UserName}</option>)}
+                            </select>
                         </div>
                         <div>
                             <p>Keyword</p>
@@ -44,7 +59,6 @@ function TaskTable(props) {
                     <table className={`w_100`}>
                         <thead>
                             <tr>
-                                <th>Key</th>
                                 <th>Subject</th>
                                 <th>Assigner</th>
                                 <th>Status</th>
@@ -55,7 +69,7 @@ function TaskTable(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {<TaskContent />}
+                            {tasks.data.map(task=><TaskContent data={task} key={task.ID}/>)}
                         </tbody>
                     </table>
                 </div>

@@ -18,12 +18,6 @@ function Header(props) {
                         <div className={`${style['home']} m_auto pos_rel`} />
                     </div>
                 </div>
-                <div className={`${style['icon-container']} d_flex`} style={path.startsWith('/add') ? {backgroundColor: "#a8bd84"}:{}} 
-                onClick={()=>props.history.push('/add')}>
-                    <div className={`${style['icon']} br_100 d_flex`}>
-                        <div className={`${style['add']} m_auto pos_rel`} />
-                    </div>
-                </div>
                 <div className={`${style['icon-container']} d_flex`} style={path.startsWith('/tasks') ? {backgroundColor: "#a8bd84"}:{}}
                 onClick={()=>props.history.push('/tasks')}>
                     <div className={`${style['icon']} br_100 d_flex`}>

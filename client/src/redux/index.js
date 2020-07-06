@@ -1,10 +1,11 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { rootReducer } from './RootReducer';
-export { fetchProjectData, fetchedProjectData, projectDataError } from './Projects/ProjectAction';
-export { fetchTaskData, fetchedTaskData, taskDataError } from './Tasks/TaskAction';
-export { fetchTeamData, fetchedTeamData, teamDataError } from './Teams/TeamAction';
-export { fetchUsersData, fetchedUsersData, usersDataError } from './Users/UserAction';
+export * from './Projects/ProjectAction';
+export * from './Tasks/TaskAction';
+export * from './Teams/TeamAction';
+export * from './Users/UserAction';
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export default store;
