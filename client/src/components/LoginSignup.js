@@ -17,6 +17,7 @@ function LoginSignup(props) {
 
     useEffect(()=>{
         localStorage.clear()
+        fetch("http://localhost:5000/api")
     })
     return (
         <div className={`${style['body-container']}`}>

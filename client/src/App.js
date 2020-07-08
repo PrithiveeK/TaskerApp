@@ -18,7 +18,7 @@ function App() {
         <Route exact path="/" component={LoginSignup} />
         <Route path="/home" component={HomePage} />
         <Route path="/project/:id" component={ProjectList} />
-        <Route path="/add" component={AddTask} />
+        <Route path="/add/:id" component={AddTask} />
         <Route path="/tasks" component={TaskTable} />
       </div>
     </BrowserRouter>

@@ -91,7 +91,7 @@ a{
   height: 22px;
   color: #fff;
   justify-content: center;
-  width: 80px;
+  width: 110px;
 }
 .status-open{
   background-color: darkorange;
@@ -109,7 +109,7 @@ a{
   background-color: greenyellow;
 }
 .status-in-progress{
-  background-color: khaki;
+  background-color: #9c9978;
 }
 .error{
   color: red;

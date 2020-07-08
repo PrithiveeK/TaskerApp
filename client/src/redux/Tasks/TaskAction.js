@@ -22,10 +22,7 @@ export function fetchAllTasks(){
     return (dispatch) => {
         dispatch(fetchTaskData())
         fetch("http://localhost:5000/api/task/all",{
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            method: "GET"
         }).then(res=>res.json())
         .then(data=>{
             dispatch(fetchedTaskData(data || []))

@@ -22,10 +22,7 @@ export function fetchAllUsers() {
     return (dispatch) => {
         dispatch(fetchUsersData());
         fetch("http://localhost:5000/api/user/all",{
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            method: "GET"
         }).then(res=>res.json())
         .then(data=>{
             dispatch(fetchedUsersData(data || []))

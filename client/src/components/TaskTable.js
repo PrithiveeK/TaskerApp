@@ -1,11 +1,20 @@
-import React, { useEffect } from 'react';
-import Header from './Header';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import Header from './Header';
 import TaskContent from './TaskContent';
 import { fetchAllUsers, fetchAllTasks } from '../redux';
 import style from '../cssModules/taskTable.module.css';
+import TaskForm from './TaskForm';
 
 function TaskTable(props) {
+
+    const [filter, setFilter] = useState({
+        status: 0,
+        category: "",
+        assignee: "",
+        keyword: ""
+    })
 
     const tasks = useSelector(state => state.tasks)
     const allUsers = useSelector(state => state.users)
@@ -15,7 +24,15 @@ function TaskTable(props) {
     useEffect(()=>{
         dispatch(fetchAllUsers())
         dispatch(fetchAllTasks())
-    },[])
+    },[dispatch])
+
+    const handleChange = (event) => {
+        setFilter({
+            ...filter,
+            [event.target.name]: event.target.value
+        })
+    }
+
     return (
         <div>
             <Header />
@@ -24,19 +41,27 @@ function TaskTable(props) {
                     <h2>Search Conditions</h2>
                     <div className={`${style['filter-line']} w_100 d_flex`}>
                         <h5>Status:</h5>
-                        <div>All</div>
-                        <div>Open</div>
-                        <div>In Progress</div>
-                        <div>Resolved</div>
-                        <div>QA</div>
-                        <div>Reopen</div>
-                        <div>Closed</div>
-                        <div>Not Closed</div>
+                        <div className={`${style['filter-op']} ${filter.status===0 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 0})}>All</div>
+                        <div className={`${style['filter-op']} ${filter.status===1 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 1})}>Open</div>
+                        <div className={`${style['filter-op']} ${filter.status===2 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 2})}>In Progress</div>
+                        <div className={`${style['filter-op']} ${filter.status===3 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 3})}>Resolved</div>
+                        <div className={`${style['filter-op']} ${filter.status===4 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 4})}>QA</div>
+                        <div className={`${style['filter-op']} ${filter.status===5 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 5})}>Reopen</div>
+                        <div className={`${style['filter-op']} ${filter.status===6 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 6})}>Closed</div>
+                        <div className={`${style['filter-op']} ${filter.status===7 ? style['filter-sel'] : ""}`}
+                        onClick={()=>setFilter({...filter, status: 7})}>Not Closed</div>
                     </div>
                     <div className={`${style['filter-line']} w_100 d_flex`}>
                         <div>
                             <p>Category</p>
-                            <select>
+                            <select onChange={handleChange} name="category">
                                 <option value=""></option>
                                 <option value="frontend">Frontend</option>
                                 <option value="server">Server</option>
@@ -46,14 +71,14 @@ function TaskTable(props) {
                         </div>
                         <div>
                             <p>Assignee</p>
-                            <select>
+                            <select onChange={handleChange} name="assignee">
                                 <option value=""></option>
                                 {allUsers.data.map(user=><option value={user.UserName} key={user.ID}>{user.UserName}</option>)}
                             </select>
                         </div>
                         <div>
                             <p>Keyword</p>
-                            <input type="text" />
+                            <input type="text" name="keyword" onChange={handleChange} value={filter.keyword} />
                         </div>
                     </div>
                     <table className={`w_100`}>
@@ -69,13 +94,21 @@ function TaskTable(props) {
                             </tr>
                         </thead>
                         <tbody>
-                            {tasks.data.map(task=><TaskContent data={task} key={task.ID}/>)}
+                            {tasks.data.map(task=><TaskContent data={task} key={task.ID} filter={filter}/>)}
                         </tbody>
                     </table>
                 </div>
             </div>
+            {props.location.search && (<div className={`${style['edit-task-container']}`}>
+                <div className={`${style['edit-task']}`}>
+                    <div className={`${style['close-icon-holder']}`} onClick={()=>props.history.push("/tasks")}>
+                        <div className={`${style['close']}`}></div>
+                    </div>
+                    <TaskForm task={tasks.data.find(task=>task.ID===props.location.search.split("=")[1])} />
+                </div>
+            </div>)}
         </div>
     );
 }
 
-export default TaskTable;
+export default withRouter(TaskTable);

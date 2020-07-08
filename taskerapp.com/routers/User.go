@@ -2,8 +2,11 @@ package routers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+
+	"go.mongodb.org/mongo-driver/mongo"
 
 	"../models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -101,21 +104,48 @@ func LogIntoUser(res http.ResponseWriter, req *http.Request) {
 //GetTeamMembers gets the team members for the user
 func GetTeamMembers(res http.ResponseWriter, req *http.Request) {
 	res.Header().Set("Content-Type", "application/json")
-
-	userID, err := primitive.ObjectIDFromHex(req.Header.Get("client"))
+	clientID, _ := req.URL.Query()["cId"]
+	userID, err := primitive.ObjectIDFromHex(clientID[0])
 	if err != nil {
 		log.Fatal(err)
 	}
+	type TeamMem struct {
+		MemberData []struct {
+			ID       primitive.ObjectID `bson:"_id"`
+			Username string             `bson:"username"`
+		} `bson:"memberData"`
+	}
+	var teamMembers []TeamMem
+	matchWith := bson.D{{Key: "$match", Value: bson.D{{Key: "leaderID", Value: userID}}}}
+	groupBy := bson.D{{
+		Key: "$group", Value: bson.D{
+			{Key: "_id", Value: "$leaderID"},
+			{Key: "members", Value: bson.D{
+				{Key: "$push", Value: "$memberID"},
+			}},
+		},
+	}}
 
-	var teamMembers []models.Teams
+	lookUp := bson.D{{
+		Key: "$lookup", Value: bson.D{
+			{Key: "from", Value: "users"},
+			{Key: "localField", Value: "members"},
+			{Key: "foreignField", Value: "_id"},
+			{Key: "as", Value: "memberData"},
+		},
+	}}
 
-	teamMemberCursor, err := TeamsColl.Find(ctx, &models.Users{ID: userID})
+	teamMemberCursor, err := TeamsColl.Aggregate(ctx, mongo.Pipeline{matchWith, groupBy, lookUp})
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("1")
+		fmt.Println(err)
+		return
 	}
 
 	if err = teamMemberCursor.All(ctx, &teamMembers); err != nil {
-		log.Fatal(err)
+		fmt.Println("2")
+		fmt.Println(err)
+		return
 	}
 
 	json.NewEncoder(res).Encode(teamMembers)
