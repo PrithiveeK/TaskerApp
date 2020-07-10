@@ -38,6 +38,8 @@ func CreateServer() {
 
 	taskerDB := client.Database("taskerapp")
 
+	defer client.Disconnect(ctx)
+
 	ProjectsColl = taskerDB.Collection("projects")
 	TasksColl = taskerDB.Collection("tasks")
 	TeamsColl = taskerDB.Collection("teams")
@@ -63,10 +65,8 @@ func CreateServer() {
 		}}); err != nil {
 			return
 		}
-		res.Write([]byte("hi"))
 	})
 	router.HandleFunc("/api/project/all", GetAllProjects).Methods("GET")
-	router.HandleFunc("/api/project/{id}", GetProject).Methods("GET")
 	router.HandleFunc("/api/task/all", GetAllTasks).Methods("GET")
 	router.HandleFunc("/api/task/add", AddTaskForProject).Methods("POST")
 	router.HandleFunc("/api/task/status", GetTaskStatusCount).Methods("GET")

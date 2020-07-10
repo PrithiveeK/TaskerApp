@@ -148,6 +148,7 @@ func GetTeamMembers(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	defer teamMemberCursor.Close(ctx)
 	json.NewEncoder(res).Encode(teamMembers)
 
 }
@@ -167,6 +168,7 @@ func GetAllUsers(res http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 
+	defer userCursor.Close(ctx)
 	json.NewEncoder(res).Encode(users)
 
 }

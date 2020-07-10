@@ -55,6 +55,7 @@ func GetAllTasks(res http.ResponseWriter, req *http.Request) {
 		log.Fatal(err)
 	}
 
+	defer taskCursor.Close(ctx)
 	json.NewEncoder(res).Encode(&tasks)
 }
 
