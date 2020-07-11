@@ -58,13 +58,14 @@ func CreateServer() {
 		}}); err != nil {
 			return
 		}
-		if _, err := TasksColl.UpdateMany(ctx, bson.M{"status": "Open", "dueDate": bson.M{"$lte": time.Now()}}, bson.D{{
+		if _, err := TasksColl.UpdateMany(ctx, bson.M{"status": "In Progress", "dueDate": bson.M{"$lte": time.Now()}}, bson.D{{
 			Key: "$set", Value: bson.D{
 				{Key: "status", Value: "Closed"},
 			},
 		}}); err != nil {
 			return
 		}
+		res.Write([]byte("HI"))
 	})
 	router.HandleFunc("/api/project/all", GetAllProjects).Methods("GET")
 	router.HandleFunc("/api/task/all", GetAllTasks).Methods("GET")
