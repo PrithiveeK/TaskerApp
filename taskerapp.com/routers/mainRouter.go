@@ -17,7 +17,6 @@ import (
 
 var client *mongo.Client
 var ctx context.Context
-var taskerApp *mongo.Database
 
 //ProjectsColl in not  exported and contains projects collection
 var ProjectsColl *mongo.Collection
